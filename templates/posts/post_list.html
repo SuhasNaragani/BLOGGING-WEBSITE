@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6"> 
+            <h1 class="display-3 fw-bold mb-3">Share your story with the world.</h1>
+            <p class="lead mb-4">Create a beautiful, personalized blog that fits your brand. Grow your audience with powerful tools, or simply share what you love.</p>
+            <a class="btn btn-dark btn-lg" href="{% url 'signup' %}">Get Started</a>
+        </div>
+        
+        <div class="col-lg-6">
+            <form method="get" class="search-filter-form">
+                <div class="d-flex justify-content-end mb-3">
+                    <div class="input-group search-input-group me-2">
+                        <input type="search" name="q" class="form-control" placeholder="Search posts..." value="{{ request.GET.q }}">
+                    </div>
+                    
+                    <div class="input-group date-input-group me-2">
+                        <input type="date" name="date" class="form-control date-input" value="{{ request.GET.date }}">
+                    </div>
+
+                    <button type="submit" class="btn btn-dark">Go</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <h2 class="mb-4">Recent Posts</h2>
+    <div class="row">
+        {% for post in posts %}
+            <div class="col-md-12 mb-4">
+                <div class="card p-4 h-100 homepage-post-card">
+                    <a href="{% url 'post_detail' post.slug %}" class="stretched-link"></a>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="me-4 post-text-content">
+                            <h5 class="post-card-title mb-2">{{ post.title }}</h5>
+                            <div class="post-card-meta mb-3">
+                                <span class="text-secondary small">{{ post.author.username }}</span>
+                                <span class="text-muted small"> &bull; {{ post.created_at|date:"M j, Y" }}</span>
+                            </div>
+                            <p class="post-card-body">{{ post.body|truncatechars:150 }}</p>
+                        </div>
+                        <div class="post-card-image-wrapper">
+                            {% if post.image %}
+                                <img src="{{ post.image.url }}" class="img-fluid post-card-image" alt="{{ post.title }}">
+                            {% else %}
+                                <img src="{% static 'images/placeholder-post-image.png' %}" class="img-fluid post-card-image" alt="{{ post.title }}">
+                            {% endif %}
+                        </div>
+                    </div>
+                   <div class="mt-4 pt-3 border-top d-flex align-items-center text-secondary small">
+                    <a href="#" class="text-secondary text-decoration-none me-3">
+                      <i class="fa-solid fa-share me-1"></i> Share
+                    </a>
+                    <a href="#" class="text-secondary text-decoration-none me-3">
+                      <i class="fa-solid fa-heart me-1"></i> Like
+                    </a>
+                    <a href="#" class="text-secondary text-decoration-none me-3">
+                      <i class="fa-solid fa-solid fa-bookmark"></i>
+                     </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p class="text-center">No posts have been published yet.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
