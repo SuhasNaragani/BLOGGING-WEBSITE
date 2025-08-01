@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card p-4">
+      <h2 class="card-title text-center mb-4">
+        {% if form.instance.pk %}Edit Post{% else %}Create a New Post{% endif %}
+      </h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="{{ form.title.id_for_label }}" class="form-label">Title</label>
+          <input type="text" name="{{ form.title.name }}" id="{{ form.title.id_for_label }}" class="form-control" placeholder="Enter post title" value="{{ form.title.value|default:'' }}">
+        </div>
+        <div class="mb-3">
+          <label for="{{ form.body.id_for_label }}" class="form-label">Body</label>
+          <textarea name="{{ form.body.name }}" id="{{ form.body.id_for_label }}" class="form-control" rows="5" placeholder="Write your blog content here...">{{ form.body.value|default:'' }}</textarea>
+        </div>
+        <div class="mb-3">
+          <label for="{{ form.status.id_for_label }}" class="form-label">Status</label>
+          <select name="{{ form.status.name }}" id="{{ form.status.id_for_label }}" class="form-select">
+            {% for value, label in form.status.field.choices %}
+              <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-4">
+          <label for="{{ form.image.id_for_label }}" class="form-label">Image</label>
+          <input type="file" name="{{ form.image.name }}" id="{{ form.image.id_for_label }}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-dark w-100">Save Post</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

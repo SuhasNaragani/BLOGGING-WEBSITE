@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card p-4 blog-post-card">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h1 class="post-title">{{ post.title }}</h1>
+                    <span class="text-secondary small">
+                        <i class="fa-regular fa-bookmark me-1"></i> Subscribe
+                    </span>
+                </div>
+                
+                <div class="post-meta d-flex align-items-center mb-4">
+                    <div class="post-author-avatar me-2">
+                        <img src="{% static 'images/placeholder-avatar.png' %}" alt="Author Avatar">
+                    </div>
+                    <div>
+                        <span class="author-name">{{ post.author.username }}</span>
+                        <span class="text-muted d-block small">{{ post.created_at|date:"M j, Y" }}</span>
+                    </div>
+                </div>
+
+                {% if post.image %}
+                    <div class="post-image-wrapper mb-4">
+                        <img src="{{ post.image.url }}" class="img-fluid w-100 rounded" alt="{{ post.title }}">
+                    </div>
+                {% endif %}
+
+                <div class="post-body">
+                    <p>{{ post.body|linebreaks }}</p>
+                </div>
+                
+                <div class="post-actions d-flex align-items-center mt-4 pt-3 border-top">
+                    <span class="me-3 text-secondary">
+                        <i class="fa-solid fa-share me-1"></i> Share
+                    </span>
+                    <span class="me-3 text-secondary">
+                        <i class="fa-solid fa-heart me-1"></i> 39
+                    </span>
+                    <span class="me-3 text-secondary">
+                        <i class="fa-solid fa-star me-1"></i> 164
+                    </span>
+                </div>
+            </div>
+
+            <div class="card p-4 mt-5 comments-section">
+                <h4 class="mb-4">Comments</h4>
+                
+                <div class="add-comment mb-5">
+                    <form method="post" class="d-flex">
+                        {% csrf_token %}
+                        <div class="flex-grow-1 me-2">
+                           <textarea name="body" id="id_body" rows="3" class="form-control" placeholder="Add a comment..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-dark">Comment</button>
+                    </form>
+                </div>
+
+                {% for comment in post.comments.all %}
+                <div class="d-flex mb-4 comment-item">
+                    <div class="comment-author-avatar me-3">
+                        <img src="{% static 'images/placeholder-avatar.png' %}" alt="{{ comment.author.username }} Avatar">
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <span class="comment-author-name">{{ comment.author.username }}</span>
+                            <span class="text-muted small">{{ comment.created_at|date:"M j, Y" }}</span>
+                        </div>
+                        <p class="comment-body mt-1">{{ comment.body|linebreaks }}</p>
+                        
+                        <div class="comment-actions d-flex small text-secondary">
+                            <span class="me-3">
+                                <i class="fa-solid fa-reply me-1"></i> Reply
+                            </span>
+                            <span class="me-3">
+                                <i class="fa-solid fa-thumbs-up me-1"></i> Like
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-center">No comments yet. Be the first!</p>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
